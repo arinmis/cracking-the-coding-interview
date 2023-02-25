@@ -1,3 +1,5 @@
+package datastructures;
+
 /* simple list interface */
 public interface List<E> { 
     // returns number of elements
