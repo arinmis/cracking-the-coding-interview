@@ -36,7 +36,6 @@ public class DynamicArray<E> { // implements List<E> {
         return temp;
     }
 
-
     /* 
      * inserts element to given index
      * and shift all the followings 
@@ -86,13 +85,19 @@ public class DynamicArray<E> { // implements List<E> {
             throw new IndexOutOfBoundsException("index " + i + " is out of bound size: " + size);
     }
 
-
     /* resize data array, capacity >= size*/
     protected void resize(int capacity) { 
         E[] newData = (E[])new Object[capacity];
         for (int i = 0; i < size; i++)
             newData[i] = data[i];
         data = newData;
+    }
+
+    public E[] copyData() {
+        E[] temp = (E[])new Object[size];
+        for (int i = 0; i < temp.length; i++)
+            temp[i] = data[i];
+        return temp;
     }
 
     @Override
@@ -102,4 +107,5 @@ public class DynamicArray<E> { // implements List<E> {
             str += data[i].toString() +  " ";
         return str + "]";
     }
+
 }
