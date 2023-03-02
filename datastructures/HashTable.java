@@ -82,17 +82,14 @@ public class HashTable<K, V> implements Iterable {
         return bucketGet(hashValue(key), key);
     }
 
-    /*
     public V remove(K key) {
         return bucketRemove(hashValue(key), key);
     }
-
 
     /* implement Cyclic-Shift Hash Code */
     public int hashValue(K key) { 
         return (int)((Math.abs(key.hashCode() * scale + shift) % prime) % capacity);
     };
-
 
     /* return talbe entries in a table 
     public Entry[] entrySet() {}
@@ -153,9 +150,29 @@ public class HashTable<K, V> implements Iterable {
         return null;
 
     }
+
     /*
-    private V bucketRemove(int h, K k) {};
+     * TODO: remove entry element when key match
+     * make it O(n) instead of O(2N) 
     */
+    private V bucketRemove(int h, K k) {
+        if (table[h] == null) return null; // bucket does not exists
+        // search in the bucket
+        int i = 0;
+        Iterator<Entry<K, V>> iterator = table[h].iterator();
+        // find remove index
+        while (iterator.hasNext()) { 
+            Entry<K, V> entry = iterator.next();
+            if (k.equals(entry.getKey()))
+                break;
+            i++;
+        }
+        Entry<K, V> removed = table[h].remove(i);
+        // if no element empty the bucket
+        if (table[h].size() == 0)
+            table[h] = null;
+        return removed.getValue();
+    };
 
     /* put entry in a bucket called h 
         private E[] entrySet();
