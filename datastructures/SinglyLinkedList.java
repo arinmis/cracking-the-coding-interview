@@ -1,7 +1,8 @@
 package datastructures; 
+import java.util.Iterator;
 
-public class SinglyLinkedList<E> implements List<E> { 
 
+public class SinglyLinkedList<E> implements List<E>, Iterable<E> { 
     private Node<E> head;
     private Node<E> tail;
     private int size;
@@ -48,6 +49,35 @@ public class SinglyLinkedList<E> implements List<E> {
             return value.toString();
         }
     }
+
+    public static class  CustomIterator<E> implements Iterator<E> {
+        Node<E> current;
+          
+        // constructor
+        public CustomIterator(SinglyLinkedList<E> sList) {
+            this.current = sList.getHead().getNext();; 
+        }
+          
+        // Checks if the next element exists
+        public boolean hasNext() {
+            return this.current.getNext() != null;
+        }
+          
+        // moves the cursor/iterator to next element
+        public E next() {
+            E value = current.getValue();
+            current = current.getNext();
+            System.out.println("this is iterated value: " + value);
+            return value;
+        }
+          
+        // Used to remove an element. Implement only if needed
+        public void remove() {
+            // Default throws UnsupportedOperationException.
+        }
+    }
+
+
 
     public SinglyLinkedList() {
         // init head and tail
@@ -126,6 +156,19 @@ public class SinglyLinkedList<E> implements List<E> {
         size--;
         return removedNode.getValue();
     }
+
+    // code for data structure
+    public Iterator<E> iterator() {
+        return new CustomIterator<E>(this);
+    }
+
+    public Node<E> getHead() { 
+        return this.head;
+    }
+
+    public Node<E> getTail() { 
+        return this.tail;
+    }
     
     @Override
     public String toString() { 
@@ -139,3 +182,5 @@ public class SinglyLinkedList<E> implements List<E> {
         return dStr.toString();
     }
 }
+
+
