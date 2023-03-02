@@ -3,6 +3,16 @@ package datastructures;
 import java.util.Random; 
 import java.util.Iterator;
         
+/* 
+ * Hash Table implementation with 
+ * `Seperate Chaining` collision handling
+ *
+ * When load factor greater than 0.5(λ > 0.5)
+ * table resize with formula: 2 * capacity - 1
+ * and all the previous entries rehashed and placed 
+ * to the new table
+ *
+ * */
 public class HashTable<K, V> implements Iterable { 
     private int n = 0;      // #entires
     private int capacity;   
@@ -31,16 +41,6 @@ public class HashTable<K, V> implements Iterable {
         this(17); // default capacity
     }
 
-    /* 
-     * select table size prime number
-     * to reduce collision 
-     *
-     * use linear probing
-     * maintain load factor: λ < 0.9
-     * to do that resize table
-     * recompute compression function
-     *
-     * */
 
     /* store each key-value pair */
     public static class Entry<K, V> { 
@@ -73,7 +73,7 @@ public class HashTable<K, V> implements Iterable {
 
     public V put(K key, V value) {
         V answer = bucketPut(hashValue(key), key, value);
-        if (n > capacity / 2) // load <= .5
+        if (n > capacity / 2) // load > .5
             resize(2 * capacity - 1); // 2 * n - 1
         return answer;
     }
@@ -90,10 +90,6 @@ public class HashTable<K, V> implements Iterable {
     public int hashValue(K key) { 
         return (int)((Math.abs(key.hashCode() * scale + shift) % prime) % capacity);
     };
-
-    /* return talbe entries in a table 
-    public Entry[] entrySet() {}
-    */
 
     /* private helper methods */
     private void resize(int newCapacity) { 
@@ -174,23 +170,27 @@ public class HashTable<K, V> implements Iterable {
         return removed.getValue();
     };
 
-    /* put entry in a bucket called h 
-        private E[] entrySet();
-        public boolean isEmpty();
-    */
+    public Iterable<K> keySet() { 
+        Iterator<Entry<K, V>> iterator = this.iterator();
+        SinglyLinkedList<K> keyList = new SinglyLinkedList<K>();
+        // search in the bucket
+        while (iterator.hasNext()) { 
+            Entry<K, V> entry = iterator.next();
+            keyList.append(entry.getKey());
+        }
+        return keyList;
+    };
 
-
-    /* 
-     * use Multiply-Add-and-Divide method 
-     * ((a * i) % p) % N
-     * where 0 < a,b < p < N
-    public int compressionFunction(int hashCode);
-    */
-    /*
-    Iterable<K> keySet();
-    Iterable<V> values();
-    Iterable<Entry<K,V>> entrySet( );
-    */
+    public Iterable<V> valueSet() { 
+        Iterator<Entry<K, V>> iterator = this.iterator();
+        SinglyLinkedList<V> valueList = new SinglyLinkedList<V>();
+        // search in the bucket
+        while (iterator.hasNext()) { 
+            Entry<K, V> entry = iterator.next();
+            valueList.append(entry.getValue());
+        }
+        return valueList;
+    }
 
     public class CustomIterator<K, V> implements Iterator<Entry> {
         Iterator<Entry<K, V>> bucketIterator;
