@@ -262,13 +262,7 @@ public class HashTable<K, V> implements Iterable {
                 System.out.print("-,");
                 continue; 
             }
-            Iterator<Entry<K, V>> iterator = bucket.iterator(); 
-            int count = 0;
-            while (iterator.hasNext()) { 
-                count++;
-                iterator.next();
-             }
-             System.out.print(count + ",");
+            System.out.print(bucket.size() + ",");
         }
         System.out.println();
     }
