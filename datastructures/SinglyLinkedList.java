@@ -50,7 +50,7 @@ public class SinglyLinkedList<E> implements List<E>, Iterable<E> {
         }
     }
 
-    public static class  CustomIterator<E> implements Iterator<E> {
+    public static class CustomIterator<E> implements Iterator<E> {
         Node<E> current;
           
         // constructor
@@ -63,11 +63,10 @@ public class SinglyLinkedList<E> implements List<E>, Iterable<E> {
             return this.current.getNext() != null;
         }
           
-        // moves the cursor/iterator to next element
+        // moves the cursor iterator to next element
         public E next() {
             E value = current.getValue();
             current = current.getNext();
-            System.out.println("this is iterated value: " + value);
             return value;
         }
           
@@ -102,7 +101,7 @@ public class SinglyLinkedList<E> implements List<E>, Iterable<E> {
     private Node<E> getNode(int i) { 
         // iterator node points head
         Node<E> iterNode = new Node<E>(this.head);
-        for (int k = 0; k <= i; k++) { 
+        for (int k = 0; k <= i; k++) {
             iterNode = iterNode.getNext();
         }
         return iterNode.getNext();
