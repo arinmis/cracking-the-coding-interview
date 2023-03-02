@@ -78,11 +78,11 @@ public class HashTable<K, V> implements Iterable {
         return answer;
     }
 
-    /*
     public V get(K key) { 
         return bucketGet(hashValue(key), key);
     }
 
+    /*
     public V remove(K key) {
         return bucketRemove(hashValue(key), key);
     }
@@ -141,8 +141,19 @@ public class HashTable<K, V> implements Iterable {
         return null; // new element inserted, no old value
     }
 
+    private V bucketGet(int h, K k) {
+        if (table[h] == null) return null; // bucket does not exists
+        Iterator<Entry<K, V>> iterator = table[h].iterator();
+        // search in the bucket
+        while (iterator.hasNext()) { 
+            Entry<K, V> entry = iterator.next();
+            if (k.equals(entry.getKey()))
+                    return entry.getValue();
+        }
+        return null;
+
+    }
     /*
-    private V  bucketGet(int h, K k) {}
     private V bucketRemove(int h, K k) {};
     */
 
