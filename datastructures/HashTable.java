@@ -86,6 +86,10 @@ public class HashTable<K, V> implements Iterable {
         return bucketRemove(hashValue(key), key);
     }
 
+    public boolean contains(K key) { 
+        return bucketContains(hashValue(key), key);
+    }
+
     /* implement Cyclic-Shift Hash Code */
     public int hashValue(K key) { 
         return (int)((Math.abs(key.hashCode() * scale + shift) % prime) % capacity);
@@ -134,6 +138,19 @@ public class HashTable<K, V> implements Iterable {
         return null; // new element inserted, no old value
     }
 
+    public boolean bucketContains(int h, K k) { 
+        if (table[h] == null) return false; // bucket does not exists
+        Iterator<Entry<K, V>> iterator = table[h].iterator();
+        // search in the bucket
+        while (iterator.hasNext()) { 
+            Entry<K, V> entry = iterator.next();
+            if (k.equals(entry.getKey()))
+                    return true;
+        }
+        return false;
+    }
+
+
     private V bucketGet(int h, K k) {
         if (table[h] == null) return null; // bucket does not exists
         Iterator<Entry<K, V>> iterator = table[h].iterator();
@@ -144,7 +161,6 @@ public class HashTable<K, V> implements Iterable {
                     return entry.getValue();
         }
         return null;
-
     }
 
     /*
