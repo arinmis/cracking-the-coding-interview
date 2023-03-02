@@ -3,7 +3,7 @@ package datastructures;
 import java.util.Random; 
 import java.util.Iterator;
         
-public class HashTable<K, V> { 
+public class HashTable<K, V> implements Iterable { 
     private int n = 0;      // #entires
     private int capacity;   
     private int prime;      // prime factor 
@@ -79,6 +79,13 @@ public class HashTable<K, V> {
         */
         return answer;
     }
+
+    /*
+    public Entry<K, V>[] entrySet() {
+        Entry<K, V>[] set = new Entry<K, V>[n];  
+        return set;
+    }
+    */
 
     /*
     public V get(K key) { 
@@ -163,22 +170,85 @@ public class HashTable<K, V> {
     Iterable<Entry<K,V>> entrySet( );
     */
 
+    public class CustomIterator<K, V> implements Iterator<Entry> {
+        Iterator<Entry<K, V>> bucketIterator;
+        SinglyLinkedList<Entry<K, V>>[] table;
+        int bucketIndex;
+          
+        // constructor
+        public CustomIterator(SinglyLinkedList<Entry<K, V>>[] table) {
+            this.table = table;
+            bucketIterator = findNextBucketIterator(0);
+        }
+          
+        // Checks if the next element exists
+        public boolean hasNext() {
+            return bucketIndex >= 0 && bucketIndex < table.length;
+        }
+
+        /* return next Buckets iterator */ 
+        private Iterator<Entry<K, V>> findNextBucketIterator(int start) { 
+            for (int i = start; i < table.length; i++) { 
+                if (table[i] != null) {
+                    bucketIndex = i;
+                    return table[bucketIndex].iterator();
+                }
+            }
+            bucketIndex = table.length;
+            return null;
+        }
+          
+        // moves the cursor iterator to next element
+        public Entry next() {
+            Entry entry = bucketIterator.next();  
+            // when there is no entry, find new bucket 
+            if (!bucketIterator.hasNext()) { 
+                bucketIterator = findNextBucketIterator(bucketIndex + 1);
+            }
+            return entry;
+        }
+          
+        // Used to remove an element. Implement only if needed
+        public void remove() {
+            // Default throws UnsupportedOperationException.
+        }
+    }
+
+
+    // code for data structure
+    public Iterator iterator() {
+        return new CustomIterator(this.table);
+    }
+
     @Override
     public String toString() { 
         DynamicString dStr = new DynamicString("[ ");
-        for (SinglyLinkedList<Entry<K, V>> bucket : table) { 
-            // skip null buckets
-            if (bucket == null) {
-                continue; 
-            }
-            Iterator<Entry<K, V>> iterator = bucket.iterator(); 
-            while (iterator.hasNext()) { 
-                Entry<K, V> entry = iterator.next();
-                dStr.append(entry + " ");
-             }
+        Iterator iterator = this.iterator();
+        while (iterator.hasNext()) { 
+            dStr.append(iterator.next() + " ");
         }
         dStr.append("]");
         return dStr.toString();
+    }
+
+
+    public void printTableDensity() { 
+        System.out.print("buckets sizes: asdf");
+        for (SinglyLinkedList<Entry<K, V>> bucket : table) { 
+            // skip null buckets
+            if (bucket == null) {
+                System.out.print("-,");
+                continue; 
+            }
+            Iterator<Entry<K, V>> iterator = bucket.iterator(); 
+            int count = 0;
+            while (iterator.hasNext()) { 
+                count++;
+                iterator.next();
+             }
+             System.out.print(count + ",");
+        }
+        System.out.println();
     }
 
 
