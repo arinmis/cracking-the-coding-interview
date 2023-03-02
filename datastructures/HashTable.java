@@ -43,7 +43,7 @@ public class HashTable<K, V> implements Iterable {
      * */
 
     /* store each key-value pair */
-    private static class Entry<K, V> { 
+    public static class Entry<K, V> { 
         private K k;
         private V v;
 
@@ -73,19 +73,10 @@ public class HashTable<K, V> implements Iterable {
 
     public V put(K key, V value) {
         V answer = bucketPut(hashValue(key), key, value);
-        /*
         if (n > capacity / 2) // load <= .5
             resize(2 * capacity - 1); // 2 * n - 1
-        */
         return answer;
     }
-
-    /*
-    public Entry<K, V>[] entrySet() {
-        Entry<K, V>[] set = new Entry<K, V>[n];  
-        return set;
-    }
-    */
 
     /*
     public V get(K key) { 
@@ -107,18 +98,21 @@ public class HashTable<K, V> implements Iterable {
     public Entry[] entrySet() {}
     */
 
-    /* private helper methods 
+    /* private helper methods */
     private void resize(int newCapacity) { 
-        Entry<K, V>[] backup = new Entry<>[n]; 
-        for (Entry<K, V> entry : entrySet())
-            backup.add(entry);
+        Entry<K, V>[] backup = (Entry<K, V>[])(new Entry[n]); 
+        Iterator<Entry<K, V>> iterator = this.iterator(); 
+        int i = 0;
+        while (iterator.hasNext()) { 
+            backup[i] = iterator.next();
+            i++;
+        }
         capacity = newCapacity;
         createTable();
         n = 0;
         for (Entry<K, V> entry : backup)
             put(entry.getKey(), entry.getValue());
     }
-    */
 
     /* create empty table */
     private void createTable() {
@@ -199,8 +193,8 @@ public class HashTable<K, V> implements Iterable {
         }
           
         // moves the cursor iterator to next element
-        public Entry next() {
-            Entry entry = bucketIterator.next();  
+        public Entry<K, V> next() {
+            Entry<K, V> entry = bucketIterator.next();  
             // when there is no entry, find new bucket 
             if (!bucketIterator.hasNext()) { 
                 bucketIterator = findNextBucketIterator(bucketIndex + 1);
@@ -233,7 +227,7 @@ public class HashTable<K, V> implements Iterable {
 
 
     public void printTableDensity() { 
-        System.out.print("buckets sizes: asdf");
+        System.out.print("buckets sizes: ");
         for (SinglyLinkedList<Entry<K, V>> bucket : table) { 
             // skip null buckets
             if (bucket == null) {
@@ -250,6 +244,5 @@ public class HashTable<K, V> implements Iterable {
         }
         System.out.println();
     }
-
 
 }
