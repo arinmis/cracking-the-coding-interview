@@ -10,7 +10,7 @@ public class Set<E> implements Iterable<E> {
     }
 
     public void add(E e) { 
-        // control the uniquenes
+        // control the uniqueness
         if (!contains(e))
             hashTable.put(e, null);
     };
