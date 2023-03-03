@@ -180,6 +180,7 @@ public class HashTable<K, V> implements Iterable {
             i++;
         }
         Entry<K, V> removed = table[h].remove(i);
+        n--;
         // if no element empty the bucket
         if (table[h].size() == 0)
             table[h] = null;
